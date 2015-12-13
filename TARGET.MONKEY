@@ -1,0 +1,4 @@
+
+#TARGET_NAME="WebCC Tool"
+#TARGET_SYSTEM="html5"
+#TARGET_BUILDER="html5"

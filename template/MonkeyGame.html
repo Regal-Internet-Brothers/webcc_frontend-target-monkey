@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+	<link rel="stylesheet" type="text/css" href="style/ccStyle_common.css"></link>
+	<link rel="stylesheet" type="text/css" href="style/ccStyle_detail.css"></link>
+
+	<title>WebCC; Online Monkey Compiler</title>
+</head>
+
+<body>
+
+<div class="wrapper">
+	<div id="resources">
+		<h2>File System</h2>
+		<table id="__monkey_resource_table">
+			<tr>
+				<th>
+					<div class="masked-upload-container mouseClick" title="No file chosen">
+	   					<input id="__monkey_dataFiles" type="file" multiple></input>
+					</div>
+				</th>
+				<th>Name</th>
+				<th>Type</th>
+				<th>Size</th>
+			</tr>
+			<tr id="__monkey_resource_1">
+				<td></td>
+				<td>user.monkey</td>
+				<td>MONKEY</td>
+				<td><center><img class="mouseClick" style="-webkit-filter: contrast(0.8); filter: contrast(0.8);" src="style/images/add_file.png" alt="%r" onclick="simulateEvent(document.getElementById('__monkey_run_cc'), 'click', true, true);"></center></id>
+			</tr>
+		</table>
+
+		<th><i class="info" title='Add source or asset files with the button on the top-left. (Types limited by configuration)'>?</i></th>
+	</div>
+
+	<div id="content">
+		<div id="header">
+			<p>
+				<h2 title="Ported by Anthony Diamond">
+					Browser-Based Monkey Compiler; <a class="loud" href="http://regal-internet-brothers.github.io/webcc">WebCC</a>
+				</h2>
+			</p>
+		</div>
+
+		<div id="meta">
+			<button id="__monkey_run_cc" onclick="runCompiler('__monkey_main', '__monkey_cc_opts');" style="position: relative;" title="Execute">Build and Run</button>
+			<input id="__monkey_cc_opts" value='-target=Html5_Game -config=Release -run "data/dev/user.monkey"' title='For a standalone application, try "JavaScript_Tool".'></input>
+			<br>
+			<input type="checkbox" id="__monkey_releaseFrames" title="Run multiple applications.">Multiple Instances.</input>
+		</div>
+
+		<center>
+<textarea id="__monkey_main">
+Function Main:Int()
+	Print("Hello world.")
+
+	Return 0
+End
+</textarea>
+
+			<p>
+				<h3 class="info" title="HTML5 builds have their own consoles; drag from the bottom to see the output.">
+					{ Compiled Source }
+				</h3>
+			</p>
+
+			<div id="compiled"></div>
+		</center>
+
+		<br>
+
+		<div>
+			<center>
+				<p>
+					<h2 title="WebCC output.">
+						<< Compiler Output >>
+					</h2>
+				</p>
+
+				<textarea id="GameConsole" class="debug" readonly></textarea>
+			</center>
+		</div>
+	</div>
+</div>
+
+<footer class="site-footer">
+	<center>
+		<b><h4>MONKEY LICENSE</h4></b>
+		<textarea id="__monkey_license" class="small" readonly>Unable to load official Monkey license.</textarea>
+		<h4>Ported by <a href="https://twitter.com/immutableoctet">@ImmutableOctet</a> (<a class="silent" href="https://github.com/ImmutableOctet">Anthony Diamond</a>)</h4>
+		<h5>{ <a class="silent" href="https://github.com/Regal-Internet-Brothers">Regal Internet Brothers</a> }</h5>
+	</center>
+</div>
+
+<script language="javascript" src="main.js">Javascript is disabled or unsupported by your browser.</script>
+<script language="javascript" src="webcc/frontend.js"></script>
+<script language="javascript" src="webcc/load.js"></script>
+
+<script type="text/javascript">
+	/*
+		NOTES:
+			* The virtual file "data/dev/user.monkey" is always used as the main module.
+			This is currently hard-coded for this portion of the frontend, unlike "frontend.js".
+			Since this is a frontend detail, this isn't an issue for the backend/compiler.
+	*/
+
+	window.onload = function (e)
+	{
+		// Initialize the file-system:
+		__os_setFileSystemEncoding(FILESYSTEM_ENCODING_STRING);
+
+		// Request Monkey's license from the host.
+		requestLicense
+		(
+			function (data)
+			{
+				var license = document.getElementById("__monkey_license");
+				
+				if (license != null)
+				{
+					license.value = data;
+				}
+			}
+		);
+
+		// Create the initial file-structure:
+		CreateDir(__monkey_user_content_dir); // "data/dev"
+		CreateDir(__monkey_user_content_dir + "/" + __monkey_user_main_dir); // "data/dev/user.data"
+
+		// Initialize hooks:
+		initUserFileHook("__monkey_dataFiles", "__monkey_resource_table");
+
+		// Execute the standard "begin" routine for 'jstool' (Initialization):
+		__monkey_jstool_exec();
+	}
+	
+	function runCompiler(fileContentId, optsId)
+	{
+		// Obtain handles to the elements specified:
+		var input = document.getElementById(fileContentId);
+		var cc_opts = document.getElementById(optsId);
+
+		// Make sure we found our elements:
+		if (input == null || cc_opts == null)
+		{
+			// Unable to continue, tell the user.
+			return -1;
+		}
+
+		// Split up the arguments into a proper array:
+		var args = cc_opts.value.split(" ");
+
+		// Get the user's file-location:
+		var location = stripQuotes(args[args.length-1]);
+
+		// Create/update our file entry.
+		__os_createFileEntry(RealPath(location), __os_String_To_Native(input.value));
+
+		// Build the code.
+		executeMonkey(args);
+
+		// Return the default response.
+		return 0;
+	}
+</script>
+</body>
+
+</html>
