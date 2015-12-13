@@ -79,7 +79,7 @@ function requestFileFromHost(path, type, callback)
 // This requests Monkey's license from the host, and supplies it to 'callback' as a string.
 function requestLicense(callback)
 {
-	requestFileFromHost("data/LICENSE.TXT", "text", callback);
+	requestFileFromHost("MONKEY_LICENSE.TXT", "text", callback);
 }
 
 // File-system related:
