@@ -120,11 +120,11 @@ function initializeFileSystem()
 	
 	var resourceTableId = "__monkey_resource_table";
 	
-	if (FileType(primary) == FILETYPE_NONE)
+	if (FileType(primary, true) == FILETYPE_NONE)
 	{
 		CreateDir(primary);
 		
-		if (FileType(secondary) == FILETYPE_NONE)
+		if (FileType(secondary, true) == FILETYPE_NONE)
 		{
 			CreateDir(secondary);
 		}
