@@ -161,9 +161,6 @@ function deinitializeFileSystem()
 	
 	// Deinitialize the file-system:
 	
-	// Formally save the file-system's time-data.
-	__os_save_filesystem_time_map();
-	
 	// Delete the temporary file-structure:
 	var primary = __monkey_user_content_dir;
 	var secondary = __monkey_user_data_dir;
@@ -177,6 +174,12 @@ function deinitializeFileSystem()
 	{
 		DeleteDir(primary, false);
 	}
+	
+	// Make sure we don't have any build folders left over. (Extension)
+	__os_eliminateByPrefix(__os_storage, RealPath(__monkey_user_content_dir + "/" + __monkey_user_file_name + ".build"));
+	
+	// Formally save the file-system's time-data.
+	__os_save_filesystem_time_map();
 	
 	__monkey_fileSystemInitialized = false;
 }
