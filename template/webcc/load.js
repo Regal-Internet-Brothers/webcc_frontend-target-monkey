@@ -114,7 +114,7 @@ function attachUserScript(frame, data, debugName)
 	script.type = "text/javascript";
 
 	// Set the script's content to our file-data, with a Chromium debug-header.
-	script.text = "//@ sourceURL=" + debugName + "\n" + data;
+	script.text = "//# sourceURL=" + debugName + "\n" + data; // "//@"
 
 	// Attach the script to our 'frame' object.
 	frame.contentWindow.document.body.appendChild(script);
