@@ -5,9 +5,15 @@
 
 // Global variable(s):
 
-// This will be the primary source-file for the user.
+// This acts as the primary source-file for the user.
 var __monkey_compiled_file = "main.js";
+
+// This acts as the primary webpage for the user.
 var __monkey_compiled_exec_file = "MonkeyGame.html";
+
+// This is used to ensure execution intent.
+// This value must be enclosed in quotes, and be the same string on the calling end.
+var __monkey_exec_prefix = "\"||MNKYEXECUTE||\"";
 
 // Functions:
 
@@ -127,7 +133,7 @@ function attachUserScript(frame, data, debugName)
 function __exec(cmd)
 {
 	// Act as "mserver" to the caller:
-	if (cmd.indexOf("mserver") > -1)
+	if (cmd.indexOf(__monkey_exec_prefix) > -1)
 	{
 		var first = cmd.indexOf("\"", 1);
 		var second = cmd.indexOf("\"", first+1);
