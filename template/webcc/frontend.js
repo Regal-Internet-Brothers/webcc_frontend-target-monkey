@@ -105,13 +105,8 @@ function initializeFileSystem()
 		return;
 	}
 	
-	// Check for a version mismatch:
-	if (__os_getVersion() != __os_default_version)
-	{
-		// Safely remove the file-system instance (Including meta-symbols):
-		__os_eliminateByPrefix(__os_storage, RealPath(""));
-		__os_eliminateByPrefix(__os_storage, __os_symbol_prefix);
-	}
+	// Safely remove the storage from 'virtualos', if necessary.
+	__os_eliminateAll_OnDifferentVersion();
 	
 	// Initialize the file-system:
 	if (!__os_hasFileSystemEncoding())
